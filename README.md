@@ -6,7 +6,7 @@
 
 שכפול המאגר (clone) מה-GitHub: 
 
-git clone [https://github.com/your_username/my_project.git](https://github.com/yitzchakdamen/Test_Management_System.git) 
+git clone https://github.com/yitzchakdamen/Test_Management_System.git 
 
 cd my_project 
 
@@ -15,7 +15,6 @@ cd my_project
 python -m venv venv 
 
 הפעלת הסביבה הווירטואלית:
-source venv/bin/activate  # בלינוקס/מק
 
 venv\Scripts\activate  # ב-Windows
 
