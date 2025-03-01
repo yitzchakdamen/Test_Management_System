@@ -4,7 +4,9 @@
 כאשר מישהו (או אתה) מוריד את הפרויקט למחשב חדש, בצע את השלבים הבאים:
 
 שכפול המאגר (clone) מה-GitHub: 
-git clone [https://github.com/your_username/my_project.git](https://github.com/yitzchakdamen/Test_Management_System.git) /
+
+git clone [https://github.com/your_username/my_project.git](https://github.com/yitzchakdamen/Test_Management_System.git) 
+
 cd my_project /
 יצירת סביבה וירטואלית מחדש: /n /n
 python -m venv venv /
