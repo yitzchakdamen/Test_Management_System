@@ -8,7 +8,7 @@
 
 git clone https://github.com/yitzchakdamen/Test_Management_System.git 
 
-cd my_project 
+cd Test_Management_System
 
 יצירת סביבה וירטואלית מחדש: 
 
