@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת מבחנים</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="login-form">
+        <form id="loginForm">
+            <h2>התחברות</h2>
+            <input type="text" id="username" placeholder="שם משתמש">
+            <input type="password" id="password" placeholder="סיסמה">
+            <button type="submit">התחבר</button>
+        </form>
+    </div>
+    <div id="exam-container" style="display: none;">
+        <div id="exam-header">
+            <h2 id="exam-title"></h2>
+            <p id="exam-description"></p>
+        </div>
+        <div id="questions-container"></div>
+        <button id="submit-exam">הגש מבחן</button>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
