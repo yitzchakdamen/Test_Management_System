@@ -4,8 +4,11 @@ from database.database import Database
 from core.exam_system import ExamSystem
 from core.grade_tracker import GradeTracker
 from core.question_manager import QuestionManager
+from flask_cors import CORS
+
 
 app = Flask(__name__)
+CORS(app)
 
 # יצירת מופעים של המחלקות העיקריות
 db = Database()
