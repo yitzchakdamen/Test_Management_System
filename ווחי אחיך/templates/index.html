@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת ניהול משפחה</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-tree"></i> עץ משפחה דיגיטלי</h1>
+            <div class="search-container">
+                <div class="search-fields">
+                    <div class="form-group">
+                        <label for="firstName">שם פרטי:</label>
+                        <input type="text" id="firstName" placeholder="הקלד שם פרטי...">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">שם משפחה:</label>
+                        <input type="text" id="lastName" placeholder="הקלד שם משפחה...">
+                    </div>
+                    <div class="form-group">
+                        <label for="city">עיר:</label>
+                        <input type="text" id="city" placeholder="הקלד שם עיר...">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">טלפון:</label>
+                        <input type="text" id="phone" placeholder="הקלד מספר טלפון...">
+                    </div>
+                </div>
+                <div class="search-buttons">
+                    <button id="searchBtn"><i class="fas fa-search"></i> חפש</button>
+                    <button id="resetSearch"><i class="fas fa-undo"></i> נקה</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="search-results" id="searchResults">
+                <h2>תוצאות חיפוש</h2>
+                <div class="results-list" id="resultsList"></div>
+            </div>
+
+            <div class="family-tree-container">
+                <h2>עץ משפחה</h2>
+                <div class="tree-controls">
+                    <button id="zoomIn"><i class="fas fa-search-plus"></i></button>
+                    <button id="zoomOut"><i class="fas fa-search-minus"></i></button>
+                    <button id="resetView"><i class="fas fa-expand"></i> התאמה למסך</button>
+                </div>
+                <div class="tree-wrapper">
+                    <div id="familyTree"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="person-details-modal" id="personModal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2 id="modalTitle">פרטי אדם</h2>
+                <div class="person-info" id="personInfo"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
