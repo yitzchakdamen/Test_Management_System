@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת ניהול משפחה</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4fc3f7;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rubik', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .search-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .search-fields {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .search-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+
+        .form-group input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        #searchBtn, #resetSearch {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        #searchBtn {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        #searchBtn:hover {
+            background-color: #3aa8e0;
+        }
+
+        #resetSearch {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            border: 1px solid #ddd;
+        }
+
+        #resetSearch:hover {
+            background-color: #e9ecef;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+
+        .search-results, .family-tree-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-results h2, .family-tree-container h2 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .results-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .person-card {
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .person-card:hover {
+            background-color: #e9ecef;
+            transform: translateX(-5px);
+        }
+
+        .person-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .person-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .tree-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tree-controls button {
+            padding: 8px 12px;
+            background-color: var(--light-color);
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tree-controls button:hover {
+            background-color: #e9ecef;
+        }
+
+        .tree-wrapper {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: #f8f9fa;
+        }
+
+        #familyTree {
+            width: 100%;
+            height: 100%;
+        }
+
+        .person-details-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 25px;
+            border-radius: 8px;
+            width: 50%;
+            max-width: 600px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 1.5rem;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .person-info {
+            margin-top: 20px;
+        }
+
+        .person-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .info-label {
+            font-weight: 500;
+            width: 120px;
+            color: var(--secondary-color);
+        }
+
+        .info-value {
+            flex: 1;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 90%;
+            }
+
+            .search-fields {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Vis.js tree styling */
+        .vis-network {
+            background-color: #f8f9fa;
+        }
+        .vis-node {
+            border: 2px solid #4a6fa5;
+            border-radius: 50%;
+            background-color: #fff;
+        }
+        .vis-node.vis-selected {
+            border-color: #ffc107;
+            box-shadow: 0 0 10px #ffc107;
+        }
+        .vis-node.current-person {
+            border-color: #4fc3f7;
+            background-color: #e3f2fd;
+        }
+        .vis-edge {
+            stroke-width: 2px;
+        }
+        .vis-edge.vis-selected {
+            stroke: #ffc107;
+        }
+        .vis-label {
+            font-family: 'Rubik', sans-serif;
+            font-size: 12px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-tree"></i> עץ משפחה דיגיטלי</h1>
+            <div class="search-container">
+                <div class="search-fields">
+                    <div class="form-group">
+                        <label for="firstName">שם פרטי:</label>
+                        <input type="text" id="firstName" placeholder="הקלד שם פרטי...">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">שם משפחה:</label>
+                        <input type="text" id="lastName" placeholder="הקלד שם משפחה...">
+                    </div>
+                    <div class="form-group">
+                        <label for="city">עיר:</label>
+                        <input type="text" id="city" placeholder="הקלד שם עיר...">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">טלפון:</label>
+                        <input type="text" id="phone" placeholder="הקלד מספר טלפון...">
+                    </div>
+                </div>
+                <div class="search-buttons">
+                    <button id="searchBtn"><i class="fas fa-search"></i> חפש</button>
+                    <button id="resetSearch"><i class="fas fa-undo"></i> נקה</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="search-results" id="searchResults">
+                <h2>תוצאות חיפוש</h2>
+                <div class="results-list" id="resultsList"></div>
+            </div>
+
+            <div class="family-tree-container">
+                <h2>עץ משפחה</h2>
+                <div class="tree-controls">
+                    <button id="zoomIn"><i class="fas fa-search-plus"></i></button>
+                    <button id="zoomOut"><i class="fas fa-search-minus"></i></button>
+                    <button id="resetView"><i class="fas fa-expand"></i> התאמה למסך</button>
+                    <button id="fitView"><i class="fas fa-project-diagram"></i> התמקד באדם נבחר</button>
+                </div>
+                <div class="tree-wrapper">
+                    <div id="familyTree"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="person-details-modal" id="personModal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2 id="modalTitle">פרטי אדם</h2>
+                <div class="person-info" id="personInfo"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Family tree app initialized');
+
+            // אלמנטים בממשק
+            const searchBtn = document.getElementById('searchBtn');
+            const resetSearch = document.getElementById('resetSearch');
+            const searchInput = document.getElementById('firstName');
+            const resultsList = document.getElementById('resultsList');
+            const familyTree = document.getElementById('familyTree');
+            const personModal = document.getElementById('personModal');
+            const closeModal = document.querySelector('.close-modal');
+            const personInfo = document.getElementById('personInfo');
+            const zoomInBtn = document.getElementById('zoomIn');
+            const zoomOutBtn = document.getElementById('zoomOut');
+            const resetViewBtn = document.getElementById('resetView');
+            const fitViewBtn = document.getElementById('fitView');
+
+            // משתנים גלובליים
+            let currentTreeData = null;
+            let currentPersonId = null;
+            let network = null;
+            let nodesDataset = null;
+            let edgesDataset = null;
+
+            // מאזינים לאירועים
+            searchBtn.addEventListener('click', searchPeople);
+            resetSearch.addEventListener('click', resetSearchFields);
+            closeModal.addEventListener('click', () => personModal.style.display = 'none');
+            window.addEventListener('click', (e) => {
+                if (e.target === personModal) personModal.style.display = 'none';
+            });
+
+            if (zoomInBtn) zoomInBtn.addEventListener('click', zoomIn);
+            if (zoomOutBtn) zoomOutBtn.addEventListener('click', zoomOut);
+            if (resetViewBtn) resetViewBtn.addEventListener('click', resetView);
+            if (fitViewBtn) fitViewBtn.addEventListener('click', fitToSelected);
+
+            // פונקציות עזר
+            function resetSearchFields() {
+                document.getElementById('firstName').value = '';
+                document.getElementById('lastName').value = '';
+                document.getElementById('city').value = '';
+                document.getElementById('phone').value = '';
+                resultsList.innerHTML = '';
+            }
+
+            async function searchPeople() {
+                const firstName = document.getElementById('firstName').value.trim();
+                const lastName = document.getElementById('lastName').value.trim();
+                const city = document.getElementById('city').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+
+                if (!firstName && !lastName && !city && !phone) {
+                    alert('אנא מלא לפחות שדה חיפוש אחד');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/search', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            first_name: firstName,
+                            last_name: lastName,
+                            city: city,
+                            phone: phone
+                        })
+                    });
+
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const people = await response.json();
+                    displaySearchResults(people);
+                } catch (error) {
+                    console.error('Error searching people:', error);
+                    alert('אירעה שגיאה בחיפוש: ' + error.message);
+                }
+            }
+
+            function displaySearchResults(people) {
+                resultsList.innerHTML = '';
+
+                if (!people || people.length === 0) {
+                    resultsList.innerHTML = '<p class="no-results">לא נמצאו תוצאות</p>';
+                    return;
+                }
+
+                people.sort((a, b) => {
+                    if (a.last_name < b.last_name) return -1;
+                    if (a.last_name > b.last_name) return 1;
+                    return a.first_name.localeCompare(b.first_name);
+                });
+
+                people.forEach(person => {
+                    if (!person.id) {
+                        console.warn('Person missing ID:', person);
+                        return;
+                    }
+
+                    const personCard = document.createElement('div');
+                    personCard.className = 'person-card';
+                    personCard.innerHTML = `
+                        <h3>${person.title || ''} ${person.first_name} ${person.last_name}</h3>
+                        <p>${person.city || 'לא צוין יישוב'} |
+                           טלפון: ${person.phone || 'לא צוין'} |
+                           נייד: ${person.mobile || 'לא צוין'}</p>
+                    `;
+                    personCard.addEventListener('click', () => loadFamilyTree(person.id));
+                    resultsList.appendChild(personCard);
+                });
+            }
+
+            async function loadFamilyTree(personId) {
+                if (!personId) {
+                    console.error('No person ID provided to loadFamilyTree');
+                    return;
+                }
+
+                currentPersonId = personId;
+
+                try {
+                    const response = await fetch(`/family/${personId}`);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+                    const familyData = await response.json();
+                    if (!familyData || !familyData.main_person) throw new Error('Invalid family data received');
+
+                    currentTreeData = familyData;
+                    showPersonDetails(familyData.main_person);
+                    createFamilyTree(familyData);
+                } catch (error) {
+                    console.error('Error loading family tree:', error);
+                    alert('אירעה שגיאה בטעינת עץ המשפחה: ' + error.message);
+                }
+            }
+
+            function createFamilyTree(data) {
+                if (!data || !data.main_person) {
+                    console.error('Invalid data for family tree');
+                    return;
+                }
+
+                // יצירת מערך צמתים וקשתות
+                const nodes = [];
+                const edges = [];
+
+                // הוספת האדם הראשי
+                const mainPerson = data.main_person;
+                nodes.push({
+                    id: mainPerson.id,
+                    label: `${mainPerson.title || ''} ${mainPerson.first_name}\n${mainPerson.last_name}`,
+                    title: `${mainPerson.title || ''} ${mainPerson.first_name} ${mainPerson.last_name}`,
+                    group: 'current',
+                    shape: 'box',
+                    color: {
+                        border: '#4fc3f7',
+                        background: '#e3f2fd',
+                        highlight: {
+                            border: '#4fc3f7',
+                            background: '#e3f2fd'
+                        }
+                    }
+                });
+
+                // הוספת האב אם קיים
+                if (data.father) {
+                    const father = data.father;
+                    nodes.push({
+                        id: father.id,
+                        label: `${father.title || ''} ${father.first_name}\n${father.last_name}`,
+                        title: `${father.title || ''} ${father.first_name} ${father.last_name}`,
+                        group: 'father',
+                        shape: 'box',
+                        color: {
+                            border: '#4a6fa5',
+                            background: '#f8f9fa',
+                            highlight: {
+                                border: '#4a6fa5',
+                                background: '#f8f9fa'
+                            }
+                        }
+                    });
+
+                    edges.push({
+                        from: father.id,
+                        to: mainPerson.id,
+                        label: 'הורה',
+                        arrows: 'to',
+                        color: { color: '#666' }
+                    });
+
+                    // הוספת אחים אם קיימים
+                    if (data.siblings && data.siblings.length > 0) {
+                        data.siblings.forEach(sibling => {
+                            nodes.push({
+                                id: sibling.id,
+                                label: `${sibling.title || ''} ${sibling.first_name}\n${sibling.last_name}`,
+                                title: `${sibling.title || ''} ${sibling.first_name} ${sibling.last_name}`,
+                                group: 'sibling',
+                                shape: 'box',
+                                color: {
+                                    border: '#28a745',
+                                    background: '#f8f9fa',
+                                    highlight: {
+                                        border: '#28a745',
+                                        background: '#f8f9fa'
+                                    }
+                                }
+                            });
+
+                            edges.push({
+                                from: father.id,
+                                to: sibling.id,
+                                label: 'הורה',
+                                arrows: 'to',
+                                color: { color: '#666' }
+                            });
+                        });
+                    }
+                }
+
+                // הוספת חותן אם קיים
+                if (data.father_in_law) {
+                    const fatherInLaw = data.father_in_law;
+                    nodes.push({
+                        id: fatherInLaw.id,
+                        label: `${fatherInLaw.title || ''} ${fatherInLaw.first_name}\n${fatherInLaw.last_name}`,
+                        title: `${fatherInLaw.title || ''} ${fatherInLaw.first_name} ${fatherInLaw.last_name}`,
+                        group: 'fatherInLaw',
+                        shape: 'box',
+                        color: {
+                            border: '#166088',
+                            background: '#f8f9fa',
+                            highlight: {
+                                border: '#166088',
+                                background: '#f8f9fa'
+                            }
+                        }
+                    });
+
+                    edges.push({
+                        from: fatherInLaw.id,
+                        to: mainPerson.id,
+                        label: 'חותן',
+                        arrows: 'to',
+                        color: { color: '#666' }
+                    });
+
+                    // הוספת גיסים אם קיימים
+                    if (data.brothers_in_law && data.brothers_in_law.length > 0) {
+                        data.brothers_in_law.forEach(brother => {
+                            nodes.push({
+                                id: brother.id,
+                                label: `${brother.title || ''} ${brother.first_name}\n${brother.last_name}`,
+                                title: `${brother.title || ''} ${brother.first_name} ${brother.last_name}`,
+                                group: 'brotherInLaw',
+                                shape: 'box',
+                                color: {
+                                    border: '#ffc107',
+                                    background: '#f8f9fa',
+                                    highlight: {
+                                        border: '#ffc107',
+                                        background: '#f8f9fa'
+                                    }
+                                }
+                            });
+
+                            edges.push({
+                                from: fatherInLaw.id,
+                                to: brother.id,
+                                label: 'הורה',
+                                arrows: 'to',
+                                color: { color: '#666' }
+                            });
+                        });
+                    }
+                }
+
+                // הוספת ילדים אם קיימים
+                if (data.children && data.children.length > 0) {
+                    data.children.forEach(child => {
+                        nodes.push({
+                            id: child.id,
+                            label: `${child.title || ''} ${child.first_name}\n${child.last_name}`,
+                            title: `${child.title || ''} ${child.first_name} ${child.last_name}`,
+                            group: 'child',
+                            shape: 'box',
+                            color: {
+                                border: '#dc3545',
+                                background: '#f8f9fa',
+                                highlight: {
+                                    border: '#dc3545',
+                                    background: '#f8f9fa'
+                                }
+                            }
+                        });
+
+                        edges.push({
+                            from: mainPerson.id,
+                            to: child.id,
+                            label: 'ילד',
+                            arrows: 'to',
+                            color: { color: '#666' }
+                        });
+                    });
+                }
+
+                // יצירת הרשת
+                const container = document.getElementById('familyTree');
+                const treeData = {
+                    nodes: new vis.DataSet(nodes),
+                    edges: new vis.DataSet(edges)
+                };
+
+                const options = {
+                    layout: {
+                        hierarchical: {
+                            direction: 'UD', // Up-Down
+                            sortMethod: 'directed',
+                            nodeSpacing: 150,
+                            levelSeparation: 100
+                        }
+                    },
+                    physics: {
+                        hierarchicalRepulsion: {
+                            nodeDistance: 120
+                        }
+                    },
+                    nodes: {
+                        font: {
+                            size: 12,
+                            face: 'Rubik'
+                        },
+                        margin: 10,
+                        widthConstraint: {
+                            maximum: 150
+                        }
+                    },
+                    edges: {
+                        smooth: {
+                            type: 'cubicBezier',
+                            forceDirection: 'vertical'
+                        },
+                        font: {
+                            size: 10,
+                            face: 'Rubik'
+                        }
+                    },
+                    interaction: {
+                        hover: true,
+                        tooltipDelay: 200,
+                        hideEdgesOnDrag: true
+                    }
+                };
+
+                // אם כבר יש רשת קיימת, עדכן אותה
+                if (network) {
+                    nodesDataset = treeData.nodes;
+                    edgesDataset = treeData.edges;
+                    network.setData(treeData);
+                } else {
+                    // אחרת צור רשת חדשה
+                    nodesDataset = treeData.nodes;
+                    edgesDataset = treeData.edges;
+                    network = new vis.Network(container, treeData, options);
+
+                    // הוסף מאזין לאירועי בחירה
+                    network.on('selectNode', function(params) {
+                        if (params.nodes.length === 1) {
+                            const selectedNodeId = params.nodes[0];
+                            loadFamilyTree(selectedNodeId);
+                        }
+                    });
+                }
+
+                // התמקד באדם הנוכחי
+                network.focus(currentPersonId, {
+                    scale: 1,
+                    animation: {
+                        duration: 1000,
+                        easingFunction: 'easeInOutQuad'
+                    }
+                });
+            }
+
+            function showPersonDetails(person) {
+                if (!personModal || !personInfo) {
+                    console.error('Modal elements not found');
+                    return;
+                }
+
+                document.getElementById('modalTitle').textContent = `${person.title || ''} ${person.first_name} ${person.last_name}`;
+
+                let html = `
+                    <div class="info-row">
+                        <div class="info-label">כתובת:</div>
+                        <div class="info-value">${person.address || 'לא צוין'}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">טלפון:</div>
+                        <div class="info-value">${person.phone || 'לא צוין'}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">נייד:</div>
+                        <div class="info-value">${person.mobile || 'לא צוין'}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">אימייל:</div>
+                        <div class="info-value">${person.email || 'לא צוין'}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">תאריך לידה:</div>
+                        <div class="info-value">${person.birth_date || 'לא צוין'}</div>
+                    </div>
+                `;
+
+                personInfo.innerHTML = html;
+                personModal.style.display = 'block';
+            }
+
+            function zoomIn() {
+                if (!network) return;
+                const scale = network.getScale();
+                network.moveTo({
+                    scale: scale * 1.2,
+                    animation: true
+                });
+            }
+
+            function zoomOut() {
+                if (!network) return;
+                const scale = network.getScale();
+                network.moveTo({
+                    scale: scale * 0.8,
+                    animation: true
+                });
+            }
+
+            function resetView() {
+                if (!network) return;
+                network.fit({
+                    animation: true
+                });
+            }
+
+            function fitToSelected() {
+                if (!network || !currentPersonId) return;
+                network.focus(currentPersonId, {
+                    scale: 1,
+                    animation: true
+                });
+            }
+        });
+    </script>
+</body>
+</html>
